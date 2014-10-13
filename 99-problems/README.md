@@ -1,3 +1,3 @@
 # Scala Project
 
-To be written.
+My solutions to the 99 Problems!

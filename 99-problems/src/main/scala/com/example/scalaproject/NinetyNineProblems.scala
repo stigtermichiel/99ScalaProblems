@@ -69,4 +69,85 @@ object NinetyNineProblems {
    pack(ls) map {x => (x.length, x.head)}
   }
 
+  def encodeModified[Symbol](ls: List[Symbol]): List[Any] = {
+    pack(ls) map {x => if (x.length == 1) x.head else (x.length, x.head) }
+  }
+
+  def decode(ls: List[(Int, Symbol)]): List[Symbol] = {
+    ls flatMap  {x => List.make(x._1, x._2)}
+    }
+
+  def encodeDirect[Symbol](ls: List[Symbol]): List[(Int, Symbol)] = {
+    if (ls.isEmpty) List()
+    else {
+      val (done, next) = ls span { _ == ls.head }
+      (done.length, done.head) :: encodeDirect(next)
+    }
+  }
+
+  def duplicate[Any](ls: List[Any]): List[Any] = ls flatMap {x => List(x,x)}
+
+  def duplicateN[Any](n: Int, ls: List[Any]): List[Any] = ls flatMap {x => List.make(n,x)}
+
+  def drop[Any](n: Int, ls: List[Any]): List[Any] = {
+    def dropRec(c: Int, ms: List[Any], result: List[Any]): List[Any] = (c, ms) match {
+      case (_, Nil) => result.reverse
+      case (1, head :: tail) => dropRec(n, tail, result)
+      case (c, head :: tail) => dropRec(c-1, tail, head :: result)
+    }
+    dropRec(n, ls, List())
+  }
+
+  def split[Any](n: Int, ls: List[Any]): (List[Any], List[Any]) = {
+    def splitRec(c: Int, ms: List[Any], result: List[Any]): (List[Any], List[Any]) = (c, ms) match {
+      case (_, Nil) => (result, Nil)
+      case (0, head :: tail) => (result.reverse, ms)
+      case (c, head :: tail) => splitRec(c-1, tail, head :: result)
+    }
+    splitRec(n, ls, List())
+  }
+
+  def slice[Any](i: Int, j: Int,  ls: List[Any]): List[Any] = {
+    def sliceRec(x: Int, y: Int, ms: List[Any], result: List[Any]): List[Any] = (x, y, ms) match {
+      case (0, _, head :: tail) => sliceRec(x-1, y-1, tail, head :: result)
+      case (x, y, head :: tail) if x < 1 && y > 1 => sliceRec(x-1, y-1, tail, head :: result)
+      case (_, 1, head :: tail) => (head ::result).reverse
+      case (_, _, head :: tail) => sliceRec(x-1, y-1, tail, result)
+    }
+    sliceRec(i, j, ls, List())
+  }
+
+  def rotate[Any](n: Int, ls: List[Any]): List[Any] = {
+    def rotateRec(c: Int, ms: List[Any]): List[Any] = (c, ms) match {
+      case (0, ms) => ms
+      case (i, head :: tail) if i > 0 => rotateRec(c-1, tail.:+(head))
+      case (i, head :: tail) if -ms.length == i => ms
+      case (i, head :: tail) if i < 0 => rotateRec(c-1, tail.:+(head))
+    }
+    rotateRec(n, ls)
+  }
+
+  def removeAt[A](n: Int, ls: List[A]): (List[A], A) = {
+    def removeAtRec(c: Int, ms: List[A], result: List[A]): (List[A], A) = (c, ms) match {
+      case (0, head :: tail) => (result ++ tail, head)
+      case (i, head :: tail) => removeAtRec(c-1, tail, head :: result)
+    }
+    removeAtRec(n, ls, List())
+  }
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
