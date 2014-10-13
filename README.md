@@ -1,0 +1,1 @@
+In this project I am trying to do the 99 Scala Problems. http://aperiodic.net/phil/scala/s-99/
